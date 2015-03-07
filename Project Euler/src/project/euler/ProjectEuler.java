@@ -6,6 +6,9 @@
 
 package project.euler;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  *
  * @author Joshua
@@ -16,9 +19,13 @@ public class ProjectEuler {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Problem11 test = new Problem11();
+        long startTime = System.currentTimeMillis();
+        Problem16 test = new Problem16();
         System.out.println("Running " + test.toString());
         test.start();
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        long endTime = System.currentTimeMillis();
+        System.out.println("Program finished in " + formatter.format((endTime - startTime) / 1000d) + " seconds.");
     }
     
 }
