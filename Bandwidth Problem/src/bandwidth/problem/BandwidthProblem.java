@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  *
@@ -22,11 +24,13 @@ import org.jgrapht.graph.*;
 public class BandwidthProblem {
 
     final static String file1 = "Data/1.txt";
+    final static String file2 = "Data/2.txt";
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
         UndirectedGraph<Integer, DefaultEdge> graph = createIntegerGraph();
         try {
             BufferedReader file;
@@ -35,6 +39,9 @@ public class BandwidthProblem {
         } catch (IOException ex) {
             Logger.getLogger(BandwidthProblem.class.getName()).log(Level.SEVERE, null, ex);
         }
+        long endTime = System.currentTimeMillis();
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        System.out.println("Program finished in " + formatter.format((endTime - startTime) / 1000d) + " seconds.");
     }
 
     private static UndirectedGraph<Integer, DefaultEdge> createIntegerGraph() {
