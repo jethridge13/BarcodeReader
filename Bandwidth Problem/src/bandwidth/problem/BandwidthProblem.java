@@ -9,19 +9,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.lang.model.element.Element;
 import org.jgrapht.*;
-import static org.jgrapht.WeightedGraph.DEFAULT_EDGE_WEIGHT;
 import org.jgrapht.graph.*;
 
 /**
@@ -34,9 +28,6 @@ public class BandwidthProblem {
     final static String file2 = "Data/2.txt";
     final static String file3 = "Data/3.txt";
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
         UndirectedGraph<Integer, DefaultEdge> graph = createIntegerGraph();
@@ -94,7 +85,7 @@ public class BandwidthProblem {
             //System.out.println("(" + firstVertex + "," + secondVertex + ")");
             graph.addEdge(firstVertex, secondVertex);
         }
-        //System.out.println(graph.toString());
+        System.out.println(graph.toString());
         return graph;
     }
 
@@ -107,11 +98,11 @@ public class BandwidthProblem {
         //System.out.println(set.toString());
         //permutation(combinations, list);
         //System.out.println(list);
-        int[] ints = new int[list.size()];
-        for (int i = 0; i < ints.length; i++) {
-            ints[i] = (int) list.get(i);
+        int[] vertices = new int[list.size()];
+        for (int i = 0; i < vertices.length; i++) {
+            vertices[i] = (int) list.get(i);
         }
-        combinations = permutations(ints);
+        combinations = combinations(vertices);
         ArrayList returnable = new ArrayList();
         for (int i = 0; i < combinations.size(); i++) {
             ArrayList temp = new ArrayList();
@@ -124,42 +115,28 @@ public class BandwidthProblem {
         return returnable;
     }
 
-    static ArrayList<int[]> permutations(int[] a) {
-        ArrayList<int[]> ret = new ArrayList<int[]>();
-        permutation(a, 0, ret);
-        return ret;
+    static ArrayList<int[]> combinations(int[] a) {
+        ArrayList<int[]> returnable = new ArrayList<int[]>();
+        combination(a, 0, returnable);
+        return returnable;
     }
 
-    public static void permutation(int[] arr, int pos, ArrayList<int[]> list) {
-        if (arr.length - pos == 1) {
-            list.add(arr.clone());
+    public static void combination(int[] a, int pos, ArrayList<int[]> list) {
+        if (a.length - pos == 1) {
+            list.add(a.clone());
         } else {
-            for (int i = pos; i < arr.length; i++) {
-                swap(arr, pos, i);
-                permutation(arr, pos + 1, list);
-                swap(arr, pos, i);
+            for (int i = pos; i < a.length; i++) {
+                swap(a, pos, i);
+                combination(a, pos + 1, list);
+                swap(a, pos, i);
             }
         }
     }
 
-    public static void swap(int[] arr, int pos1, int pos2) {
-        int h = arr[pos1];
-        arr[pos1] = arr[pos2];
-        arr[pos2] = h;
-    }
-
-    private static ArrayList<ArrayList> permutations(ArrayList a) {
-        ArrayList<ArrayList> returnable = new ArrayList<ArrayList>();
-        permutation(a, 0, returnable);
-        return returnable;
-    }
-
-    private static void permutation(ArrayList arr, int position, ArrayList<ArrayList> list) {
-        if (arr.size() - position == 1) {
-            list.add((ArrayList) arr.clone());
-        } else {
-
-        }
+    public static void swap(int[] a, int pos1, int pos2) {
+        int h = a[pos1];
+        a[pos1] = a[pos2];
+        a[pos2] = h;
     }
 
     private static ArrayList createGraphs(ArrayList<ArrayList> combinations, UndirectedGraph g) {
@@ -197,6 +174,47 @@ public class BandwidthProblem {
         }
         return returnable;
     }
+    /*
+     private static ArrayList<Integer> generateWeights(ArrayList<ArrayList> combinations, UndirectedGraph g) {
+     System.out.println("Generating weights...");
+     ArrayList<Integer> weights = new ArrayList<Integer>();
+     for (int i = 0; i < combinations.size(); i++) {
+     ArrayList<Integer> combo = combinations.get(i);
+     Set edgeSet = g.edgeSet();
+     ArrayList edges = new ArrayList();
+     edges.addAll(edgeSet);
+     int weight = 0;
+     for(int j = 0; j < edges.size(); j++){
+     String set = edges.get(j).toString();
+     String edgeStringSource = set.substring(0, set.indexOf(":"));
+     String edgeStringTarget = set.substring(set.indexOf(":"));
+     edgeStringSource = edgeStringSource.replaceAll("[^0-9]", "");
+     edgeStringTarget = edgeStringTarget.replaceAll("[^0-9]", "");
+     Integer source = Integer.parseInt(edgeStringSource);
+     Integer target = Integer.parseInt(edgeStringTarget);
+     boolean count = false;
+     weight = 0;
+     for(int k = 0; k < combo.size(); k++){
+     if(count){
+     weight++;
+     }
+     if(!count && (combo.get(k).equals(source) || combo.get(k).equals(target))){
+     count = true;
+     k++;
+     weight++;
+     }
+     if(count && (combo.get(k).equals(source) || combo.get(k).equals(target))){
+     weight++;
+     count = false;
+     }
+     }
+     }
+     weights.add(weight);
+     }
+     //System.out.println(weights);
+     return weights;
+     }
+     */
 
     private static ArrayList<Integer> generateWeights(ArrayList<ArrayList> combinations, UndirectedGraph g) {
         System.out.println("Generating weights...");
@@ -207,7 +225,7 @@ public class BandwidthProblem {
             ArrayList edges = new ArrayList();
             edges.addAll(edgeSet);
             int weight = 0;
-            for(int j = 0; j < edges.size(); j++){
+            for (int j = 0; j < edges.size(); j++) {
                 String set = edges.get(j).toString();
                 String edgeStringSource = set.substring(0, set.indexOf(":"));
                 String edgeStringTarget = set.substring(set.indexOf(":"));
@@ -217,18 +235,12 @@ public class BandwidthProblem {
                 Integer target = Integer.parseInt(edgeStringTarget);
                 boolean count = false;
                 weight = 0;
-                for(int k = 0; k < combo.size(); k++){
-                    if(count){
-                        weight++;
-                    }
-                    if(!count && (combo.get(k).equals(source) || combo.get(k).equals(target))){
+                for (int k = 0; k < combo.size(); k++) {
+                    if (combo.get(k).equals(source) || combo.get(k).equals(target)) {
                         count = true;
-                        k++;
-                        weight++;
                     }
-                    if(count && (combo.get(k).equals(source) || combo.get(k).equals(target))){
+                    if (count) {
                         weight++;
-                        count = false;
                     }
                 }
             }
@@ -238,15 +250,14 @@ public class BandwidthProblem {
         return weights;
     }
 
-
     private static void getBandwidth(ArrayList<Integer> weights, ArrayList<ArrayList> combinations) {
-        if(weights.size() != combinations.size()){
+        if (weights.size() != combinations.size()) {
             System.out.println("Something is wrong.");
         }
         int min = Integer.MAX_VALUE;
         int pos = 0;
-        for(int i = 0; i < weights.size(); i++){
-            if (weights.get(i) < min){
+        for (int i = 0; i < weights.size(); i++) {
+            if (weights.get(i) < min) {
                 min = weights.get(i);
                 pos = i;
             }
