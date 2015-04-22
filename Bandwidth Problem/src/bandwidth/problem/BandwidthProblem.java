@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bandwidth.problem;
 
 import java.io.BufferedReader;
@@ -12,6 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +16,7 @@ import org.jgrapht.graph.*;
 
 /**
  *
- * @author Joshua
+ * @author Joshua Ethridge
  */
 public class BandwidthProblem {
 
@@ -29,11 +25,39 @@ public class BandwidthProblem {
     final static String file3 = "Data/3.txt";
 
     public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
         UndirectedGraph<Integer, DefaultEdge> graph = createIntegerGraph();
+        boolean answer = true;
+        Scanner scanner = new Scanner(System.in);
+        String respond = "";
+        String fileName = "";
+        while (answer) {
+            System.out.println("Test file 1, 2, or 3?");
+            respond = scanner.next();
+            switch (respond) {
+                case "1":
+                case "one":
+                    fileName = file1;
+                    answer = false;
+                    break;
+                case "2":
+                case "two":
+                    fileName = file2;
+                    answer = false;
+                    break;
+                case "3":
+                case "three":
+                    fileName = file3;
+                    answer = false;
+                    break;
+                default:
+                    System.out.println("That is not a valid file.");
+                    
+            }
+        }
+        long startTime = System.currentTimeMillis();
         try {
             BufferedReader file;
-            file = loadFile(file3);
+            file = loadFile(fileName);
             graph = substantiateGraph(file, graph);
             ArrayList<ArrayList> combinations = createCombinations(graph);
             ArrayList<Integer> weights = generateWeights(combinations, graph);
@@ -50,7 +74,7 @@ public class BandwidthProblem {
     }
 
     private static UndirectedGraph<Integer, DefaultEdge> createIntegerGraph() {
-        UndirectedGraph<Integer, DefaultEdge> g = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+        UndirectedGraph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
         return g;
     }
 
@@ -68,7 +92,7 @@ public class BandwidthProblem {
         int edges = Integer.parseInt(stringEdges);
         int vertices = Integer.parseInt(stringVertices);
         for (int i = 0; i < vertices; i++) {
-            graph.addVertex(new Integer(i + 1));
+            graph.addVertex(i + 1);
         }
         for (int i = 0; i < edges; i++) {
             String edge = file.readLine();
@@ -144,7 +168,7 @@ public class BandwidthProblem {
         Set edgeSet = g.getAllEdges(1, combinations.get(0).size());
         for (int i = 0; i < combinations.size(); i++) {
             ArrayList vertices = combinations.get(i);
-            WeightedMultigraph<Integer, DefaultWeightedEdge> graph = new WeightedMultigraph<Integer, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+            WeightedMultigraph<Integer, DefaultWeightedEdge> graph = new WeightedMultigraph<>(DefaultWeightedEdge.class);
             for (int j = 0; j < vertices.size(); j++) {
                 Integer vertex = (Integer) vertices.get(j);
                 graph.addVertex(vertex);
@@ -218,7 +242,7 @@ public class BandwidthProblem {
 
     private static ArrayList<Integer> generateWeights(ArrayList<ArrayList> combinations, UndirectedGraph g) {
         System.out.println("Generating weights...");
-        ArrayList<Integer> weights = new ArrayList<Integer>();
+        ArrayList<Integer> weights = new ArrayList<>();
         for (int i = 0; i < combinations.size(); i++) {
             ArrayList<Integer> combo = combinations.get(i);
             Set edgeSet = g.edgeSet();
