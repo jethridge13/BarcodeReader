@@ -20,7 +20,7 @@ public class ProjectEuler {
      */
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
-        Problem16 test = new Problem16();
+        Problem21 test = new Problem21();
         System.out.println("Running " + test.toString());
         test.start();
         NumberFormat formatter = new DecimalFormat("#0.00000");
